@@ -37,9 +37,9 @@ Data is divided into train and val, with 75% of data utilized for training and t
 The loss_category has 4 possible categories: Minor, Major, Severe, Catastrophic, which will be used to categorize flooding events.
 
 ## Execution/Training
-Run the following command to train an 11B Llama-3.2 model on flooding events in Lexington, SC to perform classification and prediction. This will run the train_lora_flood_classifier program, which will train the llm on the dataset. The infer_flood_classifier program will ONLY BE USED FOR FINAL TESTING (Also, make sure that you run huggingface-cli login on bash so that you have been granted access to the model): 
+Run the following command to train an 8B Llama-3.2 model on flooding events in Lexington, SC to perform classification and prediction. This will run the train_lora_flood_classifier program, which will train the llm on the dataset. The infer_flood_classifier program will ONLY BE USED FOR FINAL TESTING (Make sure that you run huggingface-cli login on bash so that you have been granted access to the model): 
 ```
-For me use case: This has worked
+Example: 
 py ./train_lora_flood_classifier.py \
   --model_name_or_path meta-llama/Llama-3.2-11B \
   --train_file data/train.csv \
