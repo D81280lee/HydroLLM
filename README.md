@@ -11,8 +11,8 @@ We conduct experiments with CUDA 13.0 and Ubuntu 24.04
 
 Create conda environment
 ```
-conda create -n Flood python=3.13
-conda activate Flood
+conda create -n HydroLLM python=3.13
+conda activate HydroLLM
 ```
 Install the related packages.
 ```
