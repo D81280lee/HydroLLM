@@ -133,16 +133,8 @@ def pick_target_modules(model_name: str, override: Optional[List[str]] = None) -
         return [m.strip() for m in override if m.strip()]
 
     name = model_name.lower()
-    # Common sensible defaults for decoder LLMs (LLaMA/Mistral/GPT-NeoX)
     if any(k in name for k in ["llama", "mistral", "yi", "phi", "qwen", "opt", "gpt-neox", "mpt"]):
         return ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
-    # For BERT-like encoders:
-    if any(k in name for k in ["bert", "roberta", "electra", "deberta"]):
-        return ["query", "key", "value", "output.dense", "intermediate.dense"]
-    # For DistilBERT:
-    if "distilbert" in name:
-        return ["q_lin", "k_lin", "v_lin", "out_lin", "lin1", "lin2"]
-    # Fallback: try common attn/MLP names
     return ["q_proj", "k_proj", "v_proj", "o_proj", "dense", "fc1", "fc2"]
 
 
@@ -203,7 +195,7 @@ def preprocess(tokenizer, text_col: str, max_len: int):
 
 
 class WeightedTrainer(Trainer):
-    """Adds per-class weights for imbalanced datasets by overriding compute_loss."""
+    """Adds per-class weights (override computing loss) """
     def __init__(self, *args, class_weights: Optional[torch.Tensor] = None, **kwargs):
         super().__init__(*args, **kwargs)
         self.class_weights = class_weights
@@ -292,7 +284,7 @@ def main():
 
     data_collator = DataCollatorWithPadding(tokenizer=tokenizer, pad_to_multiple_of=8 if (args.bf16 or args.fp16 or args.load_in_4bit) else None)
 
-    # Class weights (optional)
+    # Class weights
     class_weights = None
     if args.class_weighting:
         # compute inverse frequency weights
@@ -355,7 +347,7 @@ def main():
             compute_metrics=compute_metrics_fn if args.do_eval else None
         )
 
-    # Save label mapping for inference
+    # Save label mapping
     mapping_path = os.path.join(args.output_dir, "label_mapping.json")
     with open(mapping_path, "w") as f:
         json.dump({"label_list": label_list, "label2id": label2id, "id2label": {str(k): v for k, v in id2label.items()}}, f, indent=2)
