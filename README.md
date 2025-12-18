@@ -31,6 +31,8 @@ Dataset format expected:
   * label_column (default: "loss_category")
 - Labels can be strings; they will be mapped to integers.
 
+Data files should be included with a data folder, separated into train.csv and val.csv
+
 The Flood_data dataset has 2 columns: "summary" and "loss_category"
 Data is divided into train and val, with 75% of data utilized for training and the remaining 25% used for evaluation. 
 
